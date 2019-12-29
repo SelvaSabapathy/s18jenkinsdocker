@@ -43,6 +43,8 @@ NOTES
     Successfully built e04176a359c1
     Successfully tagged jenkins-docker:latest
 
+    selva@smac ~/dev/tools/dockerdata/jenkins $ docker tag jenkins-docker:latest selvasabapathy/jenkins-docker:latest
+
 7. Run the built docker image to create container running Spring Boot application
 
     selva@smac ~/dev/cts/s1/8JenkinsDocker (master) $ docker run --network selva-docker-network --name selva-jenkins-docker -p 8080:8080 jenkins-docker
