@@ -1,3 +1,49 @@
+NOTES
 
-I'm running MySQL as a docker container
+1. Code is available in GitHub @ https://github.com/SelvaSabapathy/s18jenkinsdocker
+
+2. I'm running MySQL as a docker container
+
     docker run --name selva-mysql  -p3306:3306 -v ~/dev/tools/dockerdata/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=password -d mysql:latest
+
+    selva@smac ~/dev/cts/s1/8JenkinsDocker (master) $ docker ps
+    CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                               NAMES
+    47ff50c520cd        mysql:latest        "docker-entrypoint.s…"   2 days ago          Up 2 days           0.0.0.0:3306->3306/tcp, 33060/tcp   selva-mysql
+
+    selva@smac ~/dev/cts/s1/8JenkinsDocker (master) $ docker network create selva-docker-network
+
+    selva@smac ~/dev/cts/s1/8JenkinsDocker (master) $ docker network connect selva-docker-network selva-mysql
+
+3. Baseline app is ready and see working app screenshots - UI-Page1.png & UI-Page2.png
+
+4. Database model (from MySQL Workbench) is in screenshot - UI-Database.png
+
+5. I have Jenkins docker image on my local mac machine
+
+    selva@smac ~/dev/cts/s1/8JenkinsDocker (master) $ docker images | grep jenkins
+    jenkinsci/blueocean                   latest              dc0b7e6fbb0d        4 weeks ago         563MB
+
+6. Built the docker image of the application
+    selva@smac ~/dev/cts/s1/8JenkinsDocker (master) $ docker build -t jenkins-docker .
+    Sending build context to Docker daemon  41.58MB
+    Step 1/5 : FROM openjdk:latest
+     ---> e9ee535ba1b1
+    Step 2/5 : COPY target/8JenkinsDocker-1.0.0-SNAPSHOT.jar /opt/app/
+     ---> Using cache
+     ---> e73d065e70a6
+    Step 3/5 : WORKDIR /opt/app
+     ---> Using cache
+     ---> 65de3e5f81e3
+    Step 4/5 : EXPOSE 8080
+     ---> Using cache
+     ---> 8901616b8415
+    Step 5/5 : CMD java -jar 8JenkinsDocker-1.0.0-SNAPSHOT.jar
+     ---> Using cache
+     ---> e04176a359c1
+    Successfully built e04176a359c1
+    Successfully tagged jenkins-docker:latest
+
+7. Run the built docker image to create container running Spring Boot application
+
+    selva@smac ~/dev/cts/s1/8JenkinsDocker (master) $ docker run --network selva-docker-network --name selva-jenkins-docker -p 8080:8080 jenkins-docker
+
